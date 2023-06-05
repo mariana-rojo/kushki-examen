@@ -1,0 +1,28 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <h1 class="font-bold text-xl text-center uppercase underline mb-6">Transacción</h1>
+
+    <div class="flex mb-4">
+        <a id="btn-capture" href="/charges/card/capture/{{ ticket_number }}" class="w-1/2 text-center border p-2 hover:font-bold">Capturar</a>
+        <a id="btn-void" href="/charges/card/void/{{ ticket_number }}" class="w-1/2 text-center border p-2 hover:font-bold">Anulacion</a>
+    </div>
+
+    <div>
+        <pre class="bg-gray-900 text-white p-4 overflow-auto">{{ payload }}</pre>
+    </div>
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        const data = {{ payload }};
+
+        if (data.transaction_type != 'PREAUTHORIZATION') {
+            document.getElementById('btn-capture').classList.toggle('hidden');
+        }
+
+        if (data.transaction_type != 'CAPTURE') {
+            document.getElementById('btn-void').classList.toggle('hidden');
+        }
+</script>
+{% endblock %}

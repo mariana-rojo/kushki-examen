@@ -1,0 +1,95 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <h1 class="font-bold text-xl text-center uppercase underline mb-6">Suscripciones</h1>
+
+    <form id="formPay" method="post" action="/subscriptions">
+        <div class="mt-2">
+            <label class="block text-sm">Nùmero</label>
+            <input type="text" id="number" class="w-full border shadow-sm p-1.5 text-sm text-gray-900">
+        </div>
+
+        <div class="mt-2">
+            <label class="block text-sm">Nombre</label>
+            <input type="text" id="name" class="w-full border shadow-sm p-1.5 text-sm text-gray-900">
+        </div>
+
+        <div class="flex gap-4 mt-2">
+            <div class="w-1/2">
+                <label class="block text-sm">Mes</label>
+                <select id="expiry_month" class="w-full border shadow-sm p-1.5 text-sm text-gray-900">
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+
+            <div class="w-1/2">
+                <label class="block text-sm">Año</label>
+                <select id="expiry_year" class="w-full border shadow-sm p-1.5 text-sm text-gray-900">
+                    <option value="23">2023</option>
+                    <option value="24">2024</option>
+                    <option value="25">2025</option>
+                    <option value="26">2026</option>
+                    <option value="27">2027</option>
+                    <option value="28">2028</option>
+                    <option value="29">2029</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <label class="block text-sm">CVC</label>
+            <input type="text" id="cvc" class="w-full border shadow-sm p-1.5 text-sm text-gray-900">
+        </div>
+
+        <input type="hidden" name="token" value="">
+
+        <div class="mt-8">
+            <button type="button" onclick="handleSubmit()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-auto">
+                Pagar | $14.99
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        var kushki;
+
+        window.addEventListener('load', function () {
+            kushki = new Kushki({merchantId: '{{ kushki_pkey }}', inTestEnvironment: true});
+        });
+
+        function handleSubmit() {
+            kushki.requestSubscriptionToken({
+                currency: "USD",
+                card: {
+                    name: document.getElementById('name').value,
+                    number: document.getElementById('number').value,
+                    cvc: document.getElementById('cvc').value,
+                    expiryMonth: document.getElementById('expiry_month').value,
+                    expiryYear: document.getElementById('expiry_year').value
+                }
+            }, async (response) => {
+                if (!response.code) {
+                    document.getElementsByName('token')[0].value = response.token;
+
+                    const form = document.getElementById('formPay');
+                    form.submit();
+                } else {
+                    console.error('Error: ', response.error, 'Code: ', response.code, 'Message: ', response.message);
+                }
+            });
+        }
+    </script>
+{% endblock %}

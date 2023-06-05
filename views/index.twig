@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<div class="flex justify-center items-center h-screen">
+    <div class="w-full grid grid-cols-1 divide-dashed divide-y text-sm text-center font-bold leading-6 shadow-lg overflow-hidden max-w-sm mx-auto border">
+        <a href="/subscriptions" class="block p-4">Crear una suscripción</a>
+        <a href="/charges/card/authorization" class="block p-4">Preautorizar cargo</a>
+        <a href="/transactions" class="block p-4">Listado de transacciones</a>
+    </div>
+</div>
+{% endblock %}
